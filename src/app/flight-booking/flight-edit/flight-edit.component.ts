@@ -7,6 +7,7 @@ import { Flight } from '../../entities/flight';
 import { FlightService } from '../flight-search/flight.service';
 import { validateCity } from '../shared/validation/city-validator';
 import { validateAsyncCity } from '../shared/validation/async-city-validator';
+import { validateRoundTrip } from '../shared/validation/round-trip-validator';
 
 @Component({
   selector: 'app-flight-edit',
@@ -63,7 +64,9 @@ export class FlightEditComponent implements OnChanges, OnInit, OnDestroy {
   private valueChangesSubscription?: Subscription;
   private saveFlightSubscription?: Subscription;
 
-  constructor(private fb: FormBuilder, private flightService: FlightService) {}
+  constructor(private fb: FormBuilder, private flightService: FlightService) {
+    this.editForm.validator = validateRoundTrip;
+  }
 
   ngOnChanges(): void {
     if (this.flight) {
