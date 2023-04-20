@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from './flight.service';
@@ -33,6 +34,8 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
     5: true
   };
 
+  @ViewChild('flightSearchForm') flightSearchForm?: FormGroup;
+
   constructor(private flightService: FlightService) {}
 
   ngOnInit(): void {
@@ -51,6 +54,11 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   }
 
   search(): void {
+    if (this.flightSearchForm && (!this.from || !this.to || this.flightSearchForm.invalid)) {
+      this.markFormGroupDirty(this.flightSearchForm);
+      return;
+    }
+
     // 1. my observable
     this.flights$ = this.flightService.find(this.from, this.to).pipe(share());
 
@@ -69,6 +77,10 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
 
     // 3b. takeUntil terminator$ emits
     this.flights$.pipe(takeUntil(this.terminator$)).subscribe(flightsObserver);
+  }
+
+  private markFormGroupDirty(formGroup: FormGroup): void {
+    Object.values(formGroup.controls).forEach((c) => c.markAsDirty());
   }
 
   select(f: Flight): void {
