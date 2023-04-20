@@ -143,7 +143,10 @@
     <!--<app-flight-card [item]="f" [isSelected]="basket[f.id]" (isSelectedChange)="basket[f.id] = $event"></app-flight-card>-->
     <app-flight-card [item]="f" [(isSelected)]="basket[f.id]" (isSelectedChange)="$event ? selectedFlight = f : selectedFlight = null">
       <h3 class="top">Flight</h3>
-      <app-flight-status-toggle class="bottom" style="margin-left: 10px" [(isDelayed)]="f.delayed"></app-flight-status-toggle>
+      <ng-container class="bottom">
+        <app-flight-status-toggle style="margin: 0 10px" [(isDelayed)]="f.delayed"></app-flight-status-toggle>
+        <button class="btn btn-default" (click)="flightToEdit = f">Edit</button>
+      </ng-container>
     </app-flight-card>
   </div>
 </div>
@@ -155,7 +158,7 @@
 </div>
 
 <!--<div *ngIf="selectedFlight" id="selectedFlight">-->
-<ng-container *ngIf="selectedFlight">
+<!--<ng-container *ngIf="selectedFlight">
   <div>
     {{ message }}
   </div>
@@ -181,4 +184,6 @@
   </div>
 
   <button (click)="save()" class="btn btn-default">Save</button>
-</ng-container>
+</ng-container>-->
+
+<app-flight-edit [flight]="flightToEdit" />
