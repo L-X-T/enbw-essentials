@@ -14,6 +14,9 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   from = 'Hamburg';
   to = 'Graz';
 
+  minLength = 3;
+  maxLength = 15;
+
   flights: Flight[] = [];
   flights$: Observable<Flight[]> | undefined;
   flightsSubscription: Subscription | undefined;
