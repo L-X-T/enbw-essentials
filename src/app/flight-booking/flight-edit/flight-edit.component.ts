@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 
 import { Flight } from '../../entities/flight';
@@ -18,6 +20,10 @@ import { pattern } from '../../shared/global';
 export class FlightEditComponent implements OnChanges, OnInit, OnDestroy {
   @Input() flight: Flight | undefined | null;
   @Output() flightChange = new EventEmitter<Flight>();
+
+  debug = true;
+  id = '';
+  showDetails = '';
 
   private pattern = pattern;
 
@@ -70,7 +76,7 @@ export class FlightEditComponent implements OnChanges, OnInit, OnDestroy {
   private valueChangesSubscription?: Subscription;
   private saveFlightSubscription?: Subscription;
 
-  constructor(private fb: FormBuilder, private flightService: FlightService) {
+  constructor(private fb: FormBuilder, private flightService: FlightService, private route: ActivatedRoute) {
     this.editForm.validator = validateRoundTrip;
   }
 
@@ -87,8 +93,15 @@ export class FlightEditComponent implements OnChanges, OnInit, OnDestroy {
         distinctUntilChanged((a, b) => a.id === b.id && a.from === b.from && a.to === b.to && a.date === b.date)
       )
       .subscribe((value) => {
-        console.log(value);
+        if (this.debug) {
+          console.log(value);
+        }
       });
+
+    this.route.params.subscribe((params) => {
+      this.id = params['id'];
+      this.showDetails = params['showDetails'];
+    });
   }
 
   ngOnDestroy(): void {
@@ -99,14 +112,19 @@ export class FlightEditComponent implements OnChanges, OnInit, OnDestroy {
   save(): void {
     this.saveFlightSubscription = this.flightService.save(this.editForm.value).subscribe({
       next: (flight) => {
-        console.log('saved flight:', flight);
+        if (this.debug) {
+          console.log('saved flight:', flight);
+        }
 
         this.flightChange.emit(flight);
 
         this.message = 'Success!';
       },
       error: (err: HttpErrorResponse) => {
-        console.error('Error', err);
+        if (this.debug) {
+          console.error('Error', err);
+        }
+
         this.message = 'Error!';
       }
     });
