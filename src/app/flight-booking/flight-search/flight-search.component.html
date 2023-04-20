@@ -145,7 +145,7 @@
       <h3 class="top">Flight</h3>
       <ng-container class="bottom">
         <app-flight-status-toggle style="margin: 0 10px" [(isDelayed)]="f.delayed"></app-flight-status-toggle>
-        <button class="btn btn-default" [routerLink]="['/flight-edit', f.id, { showDetails: true }]">
+        <button class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', f.id, { showDetails: true }]">
           Edit
         </button>
       </ng-container>
