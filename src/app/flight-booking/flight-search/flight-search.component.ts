@@ -6,6 +6,9 @@ import { FlightService } from '../shared/services/flight.service';
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { share, takeUntil } from 'rxjs/operators';
 import { pattern } from '../../shared/global';
+import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
+import { select, Store } from '@ngrx/store';
+import { flightsLoaded } from '../+state/flight-booking.actions';
 
 @Component({
   selector: 'app-flight-search',
@@ -20,7 +23,10 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   maxLength = 15;
 
   flights: Flight[] = [];
-  flights$: Observable<Flight[]> | undefined;
+
+  // flights$: Observable<Flight[]> | undefined;
+  flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
+
   flightsSubscription: Subscription | undefined;
 
   selectedFlight: Flight | undefined | null;
@@ -39,7 +45,7 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
 
   @ViewChild('flightSearchForm') flightSearchForm?: FormGroup;
 
-  constructor(private flightService: FlightService) {}
+  constructor(private flightService: FlightService, private store: Store<FlightBookingAppState>) {}
 
   ngOnInit(): void {
     if (this.from && this.to) {
@@ -63,23 +69,32 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
     }
 
     // 1. my observable
-    this.flights$ = this.flightService.find(this.from, this.to).pipe(share());
+    // this.flights$ = this.flightService.find(this.from, this.to).pipe(share());
 
     // 2. my observer
-    const flightsObserver: Observer<Flight[]> = {
+    /*const flightsObserver: Observer<Flight[]> = {
       next: (flights) => (this.flights = flights),
       error: (errResp) => console.error('Error loading flights', errResp),
       complete: () => {
         // console.warn('complete');
       }
-    };
+    };*/
 
     // 3a. my subscription
     // this.flightsSubscription?.unsubscribe();
     // this.flightsSubscription = this.flights$.subscribe(flightsObserver);
 
     // 3b. takeUntil terminator$ emits
-    this.flights$.pipe(takeUntil(this.terminator$)).subscribe(flightsObserver);
+    // this.flights$.pipe(takeUntil(this.terminator$)).subscribe(flightsObserver);
+
+    this.flightsSubscription = this.flightService.find(this.from, this.to).subscribe({
+      next: (flights) => {
+        this.store.dispatch(flightsLoaded({ flights }));
+      },
+      error: (err) => {
+        console.error('error', err);
+      }
+    });
   }
 
   private markFormGroupDirty(formGroup: FormGroup): void {

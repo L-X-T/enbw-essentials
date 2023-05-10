@@ -55,9 +55,9 @@
       <div class="form-group">
         <button (click)="search()" class="btn btn-default">Search</button>
 
-        <button [disabled]="flights.length === 0" (click)="delayFirstFlight()" class="btn btn-default" style="margin-left: 10px">
+        <!--<button [disabled]="(flights$ | async)?.length === 0" (click)="delayFirstFlight()" class="btn btn-default" style="margin-left: 10px">
           Delay first flight
-        </button>
+        </button>-->
       </div>
     </form>
   </div>
@@ -140,20 +140,22 @@
 </table>
 </div>-->
 
-<div *ngIf="flights.length > 0" class="row">
-  <div *ngFor="let f of flights; trackBy: trackById" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-    <!--<app-flight-card [item]="f" [isSelected]="basket[f.id]" (isSelectedChange)="basket[f.id] = $event"></app-flight-card>-->
-    <app-flight-card [item]="f" [(isSelected)]="basket[f.id]" (isSelectedChange)="$event ? selectedFlight = f : selectedFlight = null">
-      <h3 class="top">Flight</h3>
-      <ng-container class="bottom">
-        <app-flight-status-toggle style="margin: 0 10px" [(isDelayed)]="f.delayed"></app-flight-status-toggle>
-        <button class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', f.id, { showDetails: true }]">
-          Edit
-        </button>
-      </ng-container>
-    </app-flight-card>
+<ng-container *ngIf="flights$ | async as flights">
+  <div *ngIf="flights.length > 0" class="row">
+    <div *ngFor="let f of flights; trackBy: trackById" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <!--<app-flight-card [item]="f" [isSelected]="basket[f.id]" (isSelectedChange)="basket[f.id] = $event"></app-flight-card>-->
+      <app-flight-card [item]="f" [(isSelected)]="basket[f.id]" (isSelectedChange)="$event ? selectedFlight = f : selectedFlight = null">
+        <h3 class="top">Flight</h3>
+        <ng-container class="bottom">
+          <app-flight-status-toggle style="margin: 0 10px" [(isDelayed)]="f.delayed"></app-flight-status-toggle>
+          <button class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', f.id, { showDetails: true }]">
+            Edit
+          </button>
+        </ng-container>
+      </app-flight-card>
+    </div>
   </div>
-</div>
+</ng-container>
 
 <div class="card">
   <div class="content">
