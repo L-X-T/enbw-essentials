@@ -9,7 +9,7 @@ import { pattern } from '../../shared/global';
 import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { loadFlights, updateFlight } from '../+state/flight-booking.actions';
-import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
+import { selectFlightsWithProps, selectIsLoadingFlights, selectLoadFlightsError } from '../+state/flight-booking.selectors';
 
 @Component({
   selector: 'app-flight-search',
@@ -19,6 +19,7 @@ import { selectFlightsWithProps } from '../+state/flight-booking.selectors';
 export class FlightSearchComponent implements OnInit, OnDestroy {
   from = 'Hamburg';
   to = 'Graz';
+  urgent = false;
 
   minLength = 3;
   maxLength = 15;
@@ -28,6 +29,8 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   // flights$: Observable<Flight[]> | undefined;
   // flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
   flights$ = this.store.select(selectFlightsWithProps({ blackList: [3] }));
+  isLoadingFlights$ = this.store.select(selectIsLoadingFlights);
+  loadFlightsError$ = this.store.select(selectLoadFlightsError);
 
   flightsSubscription: Subscription | undefined;
 
@@ -51,7 +54,7 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.from && this.to) {
-      this.search();
+      // this.search();
     }
   }
 
@@ -101,7 +104,8 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       loadFlights({
         from: this.from,
-        to: this.to
+        to: this.to,
+        urgent: this.urgent
       })
     );
   }

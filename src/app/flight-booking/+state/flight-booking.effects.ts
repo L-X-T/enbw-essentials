@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError, delay, map, switchMap } from 'rxjs/operators';
+import { Observable, of, pipe } from 'rxjs';
 import * as FlightBookingActions from './flight-booking.actions';
 import { FlightService } from '../shared/services/flight.service';
 
@@ -13,7 +13,8 @@ export class FlightBookingEffects {
       this.actions$.pipe(
         ofType(FlightBookingActions.loadFlights),
         switchMap((action) =>
-          this.flightService.find(action.from, action.to).pipe(
+          this.flightService.find(action.from, action.to, action.urgent).pipe(
+            delay(2000),
             map((flights) => FlightBookingActions.loadFlightsSuccess({ flights })),
             catchError((loadFlightsError) => of(FlightBookingActions.loadFlightsError({ loadFlightsError })))
           )

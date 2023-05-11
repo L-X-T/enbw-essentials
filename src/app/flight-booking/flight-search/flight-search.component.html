@@ -44,6 +44,14 @@
                                     [errors]="flightSearchForm.controls['to'].errors"
                                     fieldLabel="To" />
 
+      <div class="form-group">
+        <label>
+          <input [(ngModel)]="urgent" name="urgent" type="checkbox">
+          Urgent (When it's urgent it fails -- like in real life ;-))
+
+        </label>
+      </div>
+
       <div *ngIf="flightSearchForm.pending" class="text-warning">
         ... Executing Async Multi Field Validator(s) ...
       </div>
@@ -139,6 +147,18 @@
 </tr>
 </table>
 </div>-->
+
+<div *ngIf="isLoadingFlights$ | async" class="card">
+  <div class="content">
+    ... is loading flights ...
+  </div>
+</div>
+
+<div *ngIf="loadFlightsError$ | async as errorResponse" class="card">
+  <div class="content text-danger">
+    {{ errorResponse.message }}
+  </div>
+</div>
 
 <ng-container *ngIf="flights$ | async as flights">
   <div *ngIf="flights.length > 0" class="row">

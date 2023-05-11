@@ -14,9 +14,10 @@ export class FlightService {
 
   constructor(private http: HttpClient) {}
 
-  find(from: string, to: string): Observable<Flight[]> {
+  find(from: string, to: string, urgent = false): Observable<Flight[]> {
+    const url = urgent ? 'http://www.angular.at/api/error?code=403' : this.url;
     const params = new HttpParams().set('from', from).set('to', to);
-    return this.http.get<Flight[]>(this.url, { headers: this.headers, params });
+    return this.http.get<Flight[]>(url, { headers: this.headers, params });
   }
 
   findById(id: string): Observable<Flight> {
