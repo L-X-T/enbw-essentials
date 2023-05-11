@@ -9,6 +9,7 @@ import { pattern } from '../../shared/global';
 import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
 import { Store } from '@ngrx/store';
 import { flightsLoaded, updateFlight } from '../+state/flight-booking.actions';
+import { selectedFilteredFlights } from '../+state/flight-booking.selectors';
 
 @Component({
   selector: 'app-flight-search',
@@ -25,7 +26,8 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   flights: Flight[] = [];
 
   // flights$: Observable<Flight[]> | undefined;
-  flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
+  // flights$ = this.store.select((appState) => appState[flightBookingFeatureKey].flights);
+  flights$ = this.store.select(selectedFilteredFlights);
 
   flightsSubscription: Subscription | undefined;
 
