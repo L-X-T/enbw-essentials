@@ -3,12 +3,12 @@ import { FormGroup } from '@angular/forms';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from '../shared/services/flight.service';
-import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, take } from 'rxjs';
 import { share, takeUntil } from 'rxjs/operators';
 import { pattern } from '../../shared/global';
 import { FlightBookingAppState, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
-import { select, Store } from '@ngrx/store';
-import { flightsLoaded } from '../+state/flight-booking.actions';
+import { Store } from '@ngrx/store';
+import { flightsLoaded, updateFlight } from '../+state/flight-booking.actions';
 
 @Component({
   selector: 'app-flight-search',
@@ -134,17 +134,14 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
   }
 
   delayFirstFlight(): void {
-    if (this.flights.length > 0) {
-      const ONE_MINUTE = 1000 * 60;
-      const firstFlight = this.flights[0];
-      const date = new Date(firstFlight.date);
-      const newDate = new Date(date.getTime() + 15 * ONE_MINUTE);
+    this.flights$.pipe(take(1)).subscribe((flights) => {
+      const flight = flights[0];
 
-      // mutable update
-      // firstFlight.date = newDate.toISOString();
+      const oldDate = new Date(flight.date);
+      const newDate = new Date(oldDate.getTime() + 15 * 60 * 1000);
+      const newFlight = { ...flight, date: newDate.toISOString() };
 
-      // immutable update
-      this.flights[0] = { ...firstFlight, date: newDate.toISOString() };
-    }
+      this.store.dispatch(updateFlight({ flight: newFlight }));
+    });
   }
 }

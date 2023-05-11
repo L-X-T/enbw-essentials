@@ -55,9 +55,9 @@
       <div class="form-group">
         <button (click)="search()" class="btn btn-default">Search</button>
 
-        <!--<button [disabled]="(flights$ | async)?.length === 0" (click)="delayFirstFlight()" class="btn btn-default" style="margin-left: 10px">
+        <button [disabled]="(flights$ | async)?.length === 0" (click)="delayFirstFlight()" class="btn btn-default" style="margin-left: 10px">
           Delay first flight
-        </button>-->
+        </button>
       </div>
     </form>
   </div>
