@@ -5,15 +5,12 @@ import { Observable } from 'rxjs';
 import { FlightBookingEffects } from './flight-booking.effects';
 
 describe('FlightBookingEffects', () => {
-  let actions$: Observable<any>;
+  let actions$: Observable<unknown>;
   let effects: FlightBookingEffects;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        FlightBookingEffects,
-        provideMockActions(() => actions$)
-      ]
+      providers: [FlightBookingEffects, provideMockActions(() => actions$)]
     });
 
     effects = TestBed.inject(FlightBookingEffects);

@@ -50,7 +50,7 @@ export class FlightSearchComponent implements OnInit, OnDestroy {
 
   @ViewChild('flightSearchForm') flightSearchForm?: FormGroup;
 
-  constructor(private flightService: FlightService, private store: Store<FlightBookingAppState>) {}
+  constructor(private flightService: FlightService, private store: Store) {}
 
   ngOnInit(): void {
     if (this.from && this.to) {

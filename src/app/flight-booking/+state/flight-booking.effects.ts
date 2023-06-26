@@ -9,8 +9,9 @@ import { FlightService } from '../shared/services/flight.service';
 @Injectable()
 export class FlightBookingEffects {
   loadFlights$ = createEffect(
-    (): Observable<any> =>
-      this.actions$.pipe(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (): Observable<any> => {
+      return this.actions$.pipe(
         ofType(FlightBookingActions.loadFlights),
         switchMap((action) =>
           this.flightService.find(action.from, action.to, action.urgent).pipe(
@@ -19,7 +20,8 @@ export class FlightBookingEffects {
             catchError((loadFlightsError) => of(FlightBookingActions.loadFlightsError({ loadFlightsError })))
           )
         )
-      )
+      );
+    }
   );
 
   constructor(private actions$: Actions, private flightService: FlightService) {}

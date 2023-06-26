@@ -4,9 +4,9 @@ import * as fromFlightBooking from './flight-booking.reducer';
 export const selectFlightBookingState = createFeatureSelector<fromFlightBooking.State>(fromFlightBooking.flightBookingFeatureKey);
 
 export const selectFlights = createSelector(selectFlightBookingState, (featureState) => featureState.flights);
-export const negativeList = createSelector(selectFlightBookingState, (featureState) => featureState.negativeList);
+export const selectNegativeList = createSelector(selectFlightBookingState, (featureState) => featureState.negativeList);
 
-export const selectedFilteredFlights = createSelector(selectFlights, negativeList, (flights, negativeList) =>
+export const selectFilteredFlights = createSelector(selectFlights, selectNegativeList, (flights, negativeList) =>
   flights.filter((f) => !negativeList.includes(f.id))
 );
 
