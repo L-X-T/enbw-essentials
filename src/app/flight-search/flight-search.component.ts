@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 
 import { Flight } from '../entities/flight';
 import { FlightService } from './flight.service';
-import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subject, Subscription } from 'rxjs';
 import { share, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -14,8 +14,10 @@ export class FlightSearchComponent implements OnDestroy {
   from = 'Graz';
   to = 'Hamburg';
 
-  flights: Flight[] = [];
-  flights$: Observable<Flight[]> | undefined;
+  flights: Flight[] = []; // old school
+  flights$: Observable<Flight[]> | undefined; // observable
+  flightsSubject = new BehaviorSubject<Flight[]>([]); // signal
+  flightsSignal = signal<Flight[]>([]); // signal
   flightsSubscription: Subscription | undefined;
 
   selectedFlight: Flight | undefined | null;
@@ -33,7 +35,11 @@ export class FlightSearchComponent implements OnDestroy {
 
     // 2. my observer
     const flightsObserver: Observer<Flight[]> = {
-      next: (flights) => (this.flights = flights),
+      next: (flights) => {
+        this.flights = flights;
+        this.flightsSubject.next(flights);
+        this.flightsSignal.set(flights);
+      },
       error: (errResp) => console.error('Error loading flights', errResp),
       complete: () => console.warn('complete')
     };
