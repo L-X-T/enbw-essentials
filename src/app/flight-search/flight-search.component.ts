@@ -5,10 +5,11 @@ import { FlightService } from './flight.service';
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { share, takeUntil } from 'rxjs/operators';
 import { SharedModule } from '../shared/shared.module';
+import { CityPipe } from '../pipes/city.pipe';
 
 @Component({
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, CityPipe],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
   styleUrls: ['./flight-search.component.css']
