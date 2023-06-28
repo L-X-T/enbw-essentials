@@ -1,11 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { Flight } from '../../entities/flight';
+import { Flight } from '../entities/flight';
 import { FlightService } from './flight.service';
 import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { share, takeUntil } from 'rxjs/operators';
+import { SharedModule } from '../shared/shared.module';
 
 @Component({
+  standalone: true,
+  imports: [SharedModule],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
   styleUrls: ['./flight-search.component.css']
