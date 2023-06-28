@@ -150,7 +150,7 @@ If you want, guide the following through the exercise:
      </p>
      </details>
 
-8. Open the ``app.component.html`` file and replace the call to ``flight-search`` with a placeholder (``<router-outlet> </router-outlet>``) for the Router.
+8. Open the ``app.component.html`` file and replace the call to ``app-flight-search`` with a placeholder (``<router-outlet> </router-outlet>``) for the Router.
 
    <details>
    <summary>Show source</summary>

@@ -8,7 +8,7 @@
 
 ## Components deep dive
 
-In this exercise you will first create the FlightCardComponent shown. Then you will create your own component with the knowledge you have built up in a bonus exercise.
+In this exercise you will first create the FlightCardComponent shown. Then you will create your own component with the knowledge you have built up in a bonus exercise. For the sake of experience we'll not use the `ng generate` command and instead create the component manually.
 
 ### FlightCardComponent
 
@@ -24,7 +24,7 @@ In this exercise you will first create the FlightCardComponent shown. Then you w
       selector: 'app-flight-card',
       templateUrl: './flight-card.component.html'
     })
-    export class FlightCardComponent implements OnInit {
+    export class FlightCardComponent {
       @Input({ required: true }) item!: Flight;
       @Input() isSelected = false;
       @Output() isSelectedChange = new EventEmitter<boolean>();
@@ -98,7 +98,7 @@ In this exercise you will first create the FlightCardComponent shown. Then you w
 5. Open the file _flight-search.component.ts_ and add the one property _basket_:
 
     ```typescript
-    export class FlightSearchComponent implements OnInit {
+    export class FlightSearchComponent {
       from = '';
       to = '';
       flights: Flight[] = [];
