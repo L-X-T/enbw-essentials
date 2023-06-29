@@ -3,7 +3,6 @@
     "angular.ng-template",
     "cyrilletuzi.angular-schematics",
     "nrwl.angular-console",
-    "steoates.autoimport",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "firsttris.vscode-jest-runner",
